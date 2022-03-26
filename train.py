@@ -157,6 +157,10 @@ if __name__ == "__main__":
     #   save_period     多少个epoch保存一次权值，默认每个世代都保存
     #------------------------------------------------------------------#
     save_period         = 1
+    #------------------------------------------------------------------#
+    #   save_dir        权值与日志文件保存的文件夹
+    #------------------------------------------------------------------#
+    save_dir            = 'logs'
 
     #------------------------------------------------------------------#
     #   VOCdevkit_path  数据集路径
@@ -252,8 +256,8 @@ if __name__ == "__main__":
         #   判断当前batch_size与64的差别，自适应调整学习率
         #-------------------------------------------------------------------#
         nbs     = 64
-        Init_lr_fit = max(batch_size / nbs * Init_lr, 1e-4)
-        Min_lr_fit  = max(batch_size / nbs * Min_lr, 1e-6)
+        Init_lr_fit = max(batch_size / nbs * Init_lr, 3e-4)
+        Min_lr_fit  = max(batch_size / nbs * Min_lr, 3e-6)
 
         optimizer = {
             'adam'  : Adam(lr = Init_lr_fit, beta_1 = momentum),
@@ -285,10 +289,10 @@ if __name__ == "__main__":
         #   early_stopping  用于设定早停，val_loss多次不下降自动结束训练，表示模型基本收敛
         #-------------------------------------------------------------------------------#
         time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-        log_dir         = os.path.join('logs', "loss_" + str(time_str))
+        log_dir         = os.path.join(save_dir, "loss_" + str(time_str))
         logging         = TensorBoard(log_dir)
         loss_history    = LossHistory(log_dir)
-        checkpoint      = ModelCheckpoint('logs/ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
+        checkpoint      = ModelCheckpoint(os.path.join(save_dir, "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5"), 
                                 monitor = 'val_loss', save_weights_only = True, save_best_only = False, period = save_period)
         early_stopping  = EarlyStopping(monitor='val_loss', min_delta = 0, patience = 10, verbose = 1)
         lr_scheduler    = LearningRateScheduler(lr_scheduler_func, verbose = 1)
@@ -320,8 +324,8 @@ if __name__ == "__main__":
             #   判断当前batch_size与64的差别，自适应调整学习率
             #-------------------------------------------------------------------#
             nbs     = 64
-            Init_lr_fit = max(batch_size / nbs * Init_lr, 1e-4)
-            Min_lr_fit  = max(batch_size / nbs * Min_lr, 1e-6)
+            Init_lr_fit = max(batch_size / nbs * Init_lr, 3e-4)
+            Min_lr_fit  = max(batch_size / nbs * Min_lr, 3e-6)
             #---------------------------------------#
             #   获得学习率下降的公式
             #---------------------------------------#
