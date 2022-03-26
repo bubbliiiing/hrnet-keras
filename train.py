@@ -145,6 +145,7 @@ if __name__ == "__main__":
     #                   当使用SGD优化器时建议设置   Init_lr=1e-2
     #   momentum        优化器内部使用到的momentum参数
     #   weight_decay    权值衰减，可防止过拟合
+    #                   adam会导致weight_decay错误，使用adam时建议设置为0。
     #------------------------------------------------------------------#
     optimizer_type      = "sgd"
     momentum            = 0.937
